@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google_drive_simulator", "Google_drive_simulator\Google_drive_simulator.csproj", "{B4F544E9-189D-4B8F-91AD-6C3FA9D94512}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DS.Entities", "DS.Entities\DS.Entities.csproj", "{43E1485E-BF9A-4AC8-9F02-A9284603C194}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DS.DAL", "DS.DAL\DS.DAL.csproj", "{3A681B4A-838A-4259-A993-AAE6C560B493}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google_drive_WebAPI", "Google_drive_WebAPI\Google_drive_WebAPI.csproj", "{92AA183C-E0E8-4286-AB08-8DCDF2BE4F57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4F544E9-189D-4B8F-91AD-6C3FA9D94512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4F544E9-189D-4B8F-91AD-6C3FA9D94512}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4F544E9-189D-4B8F-91AD-6C3FA9D94512}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4F544E9-189D-4B8F-91AD-6C3FA9D94512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E1485E-BF9A-4AC8-9F02-A9284603C194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E1485E-BF9A-4AC8-9F02-A9284603C194}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E1485E-BF9A-4AC8-9F02-A9284603C194}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E1485E-BF9A-4AC8-9F02-A9284603C194}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A681B4A-838A-4259-A993-AAE6C560B493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A681B4A-838A-4259-A993-AAE6C560B493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A681B4A-838A-4259-A993-AAE6C560B493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A681B4A-838A-4259-A993-AAE6C560B493}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92AA183C-E0E8-4286-AB08-8DCDF2BE4F57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92AA183C-E0E8-4286-AB08-8DCDF2BE4F57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92AA183C-E0E8-4286-AB08-8DCDF2BE4F57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92AA183C-E0E8-4286-AB08-8DCDF2BE4F57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
