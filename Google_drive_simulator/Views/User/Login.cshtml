@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css{
+    <style>
+    body {font-family: 'Open Sans', sans-serif;
+  background: url('@Url.Content("~/background/abc.jpg")') no-repeat;
+	background-size: cover;}
+        </style>
+    }
+@section scripts
+{
+    <script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script>
+
+       $(document).ready(function () {
+
+
+           $('#reset').click(function (e) {
+
+               if ($('#email').val().length == 0) {
+                   alert("Please fill the email");
+                   return false;
+               }
+               if ($('login').val().length == 0) {
+                   alert("Please fill the login");
+                   return false;
+               }
+           });
+       });
+       function validate()
+       {
+           var flag = true;
+           if ($('login').val().length==0) {
+               alert("Please fill the login");
+               return false;
+           }
+
+
+          return true;
+       }
+    </script>
+}
+<div class="div1" style="height:auto">
+    <img  src="~/background/person.png" style="height:100px;width:100px;border-radius:150px;color:white"/> 
+  <h1 style="color:white;">Login</h1>
+    <div class="btn-group">
+        <br><br>
+        <form action="~/User/Login" method="post" onsubmit="return validate();">
+            <div style="width:500px;padding:0px">
+                <span style="color:red;">@ViewBag.MSG</span>
+                <input class="box" type="text" name="login" placeholder="Login" value ="@ViewBag.Login" required>
+                <br><br>
+
+                <input class="box" type="password" name="password" placeholder="Password">
+                <br><br>
+                <br><br>
+
+                <input name="btnLogin" type="submit" class="submit" value="Login"/>
+              <br /><br /><br />
+                </div>
+        </form>
+       
+           
+      
+
+    </div>
+    </div>
+
+
+  

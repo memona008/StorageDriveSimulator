@@ -1,0 +1,7 @@
+@section css{
+    <style>
+    body {font-family: 'Open Sans', sans-serif;
+  background: url(@Url.Content("~/background/spbackground.jpg")) no-repeat;
+	background-size: cover;}
+    </style>
+}

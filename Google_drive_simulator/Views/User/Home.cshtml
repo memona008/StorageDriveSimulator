@@ -1,0 +1,472 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+@section scripts
+{
+   <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+  <script>
+    
+      $(document).ready(function main() {
+          arrNames = [];
+          arrIDs = [];
+          arrNames[arrNames.length] = "Folders";
+          arrIDs[0] = -1;
+          localStorage["cl"] = -1;
+          loadFolders(-1);
+          loadFiles(-1);
+          $('.alert').hide();
+          $('#btnOK').click(function (e) {
+              var name = $('#txtName').val();
+              HideDialog();
+              if (name == "")
+              {
+                  $('.alert').show();
+                  $('#alert').text("Folder's name cant be empty");
+              }
+              else {
+                  var curr = localStorage["cl"];
+                  createFolder(name, curr);
+              }
+              
+              
+          });
+          $(".fileinput").on("change.bs.fileinput", function () {
+              // show some gif for 2 seconds or 3
+              var f = $("#uploadedFile").get(0).files;
+              
+              var data = new FormData();
+              if (f.length > 0)
+              {
+                  for (var i = 0; i < f.length; i++) {
+                      var fileSize = f[i].size / 1024 / 1024;
+                      if (fileSize <= 8) {
+                          data.append("uploadedFiles" + i, f[i]);
+                      }
+                      else
+                      {
+                          $('.alert').show();
+                          $('#alert').text("You cant upload more than 8Mbs");
+                          return false;
+                      }
+
+                  }
+                      
+                      data.append("parent", localStorage['cl']);
+                 
+              }
+              saveFiles(data);
+              loadFiles(localStorage['cl']);
+             
+          });
+
+          $('#search').click(function (e) {
+
+              var text = $('#searchText').val();
+              if(text=="")
+              {
+                  $('.alert').show();
+                  $('#alert').text("Write something in Search bar first");
+                  return false;
+              }
+              else
+              {
+                  searchFiles(text);
+              }
+
+          });
+
+      });
+      function loadFolders(id) {
+          loadPath();
+          $('.alert').hide();
+          $(".folders_back").empty();
+          $("error").empty();
+
+          var d = { "id": id };
+          var settings = {
+              type: "POST",
+              dataType: "json",
+              url: "/User/Folder",
+              data: d,
+              success: function (resp) {
+                  if (resp.Folders && resp.flag == true) {
+                      $("#error").html("");
+                      var source = $("#folderstemplate").html();
+                      var template = Handlebars.compile(source);
+                      var html = template(resp);
+                      $("#foldersBody").append(html);
+
+                  }
+                  else {
+                      $("#error").html("Empty Folder");
+                  }
+
+              },
+              error: function (e) {
+                  alert("error");
+              }
+          };
+
+          $.ajax(settings);
+
+          return false;
+      }
+      function loadFiles(id) {
+          loadPath();
+          $('.alert').hide();
+          $(".files_back").empty();
+          $("error").empty();
+
+          var d = { "id": id };
+          var settings = {
+              type: "POST",
+              dataType: "json",
+              url: "/User/GetFile",
+              data: d,
+              success: function (resp) {
+                  if (resp.Files && resp.flag == true) {
+                      $("#File_error").html("");
+                     
+                      var source = $("#filestemplate").html();
+                      var template = Handlebars.compile(source);
+                      var html = template(resp);
+                      $("#filesBody").append(html);
+
+                  }
+                  else {
+                      $("#File_error").html("No Files");
+                  }
+
+              },
+              error: function (e) {
+                  alert("error");
+              }
+          };
+
+          $.ajax(settings);
+
+          return false;
+      }
+      function createFolder(name, curr) {
+          var d = { "name": name, "parent": curr };
+          var settings = {
+              type: "POST",
+              dataType: "json",
+              url: "api/values/CreateFolder",
+              data: d,
+              success: function (resp) {
+                  if (resp.created == true) {
+                      var cl = localStorage['cl'];
+                      loadFolders(cl);
+                  }
+
+              },
+              error: function (e) {
+                  alert("error");
+              }
+          };
+
+          $.ajax(settings);
+
+          return false;
+      }
+      function enter(id,name) {
+          $(".folders_back").empty();
+          $(".files_back").empty();
+          loadFiles(id);
+          loadFolders(id);        
+          localStorage["cl"] = id;
+          arrNames[arrNames.length] = name;
+          arrIDs[arrIDs.length] = id;
+          loadPath();
+         
+      }
+      function delFile(id) {
+          var value = confirm("Delete?");
+          if (value == true) {
+              var d = { "id": id };
+              var settings = {
+                  type: "POST",
+                  dataType: "json",
+                  url: "/User/DeleteFile",
+                  data: d,
+                  success: function (resp) {
+                      if (resp.deleted == true) {
+                          loadFiles(localStorage['cl']);
+                      }
+
+                  },
+                  error: function (e) {
+                      alert("error");
+                  }
+              };
+
+              $.ajax(settings);
+
+              return false;
+          }
+      }
+      function del(id)
+      {
+          var value = confirm("Delete?");
+          if (value == true)
+          {
+              var d = { "id": id};
+              var settings = {
+                  type: "POST",
+                  dataType: "json",
+                  url: "/User/DeleteFolder",
+                  data: d,
+                  success: function (resp) {
+                      if (resp.deleted == true) {
+                          loadFolders(localStorage['cl']);                         
+                         
+                      }
+
+                  },
+                  error: function (e) {
+                      alert("error");
+                  }
+              };
+
+              $.ajax(settings);
+
+              return false;
+          }
+        
+      }
+      function loadPath()
+      {
+          $("#path").empty();
+         
+          for(var x in arrNames)
+          {            
+              $("#path").text($("#path").text()+arrNames[x] + " > ");
+          }
+      }   
+      function ShowDialog() {
+
+          $('#divoverlay').show();
+          $('#modal_dialog').slideDown(500);
+      }
+      function ShowLoading() {
+
+          $('#divoverlay').show();
+          $('#loadingBar').show();
+         
+      }
+      function HideDialog() {
+          $('#divoverlay').hide();
+          $('#modal_dialog').slideUp(500);
+      }
+      function HideLoading() {
+          $('#divoverlay').hide();
+          $('#loadingBar').hide();
+      }
+      function back() {
+                   
+          if (arrNames.length > 1) {            
+              arrNames.pop();
+              arrIDs.pop();
+              localStorage['cl'] = arrIDs[arrIDs.length - 1];
+              loadPath();
+
+              loadFolders(localStorage['cl']);
+              loadFiles(localStorage['cl']);
+          }
+      }
+      function saveFiles(file)
+      {
+      
+          var settings = {
+              type: "POST",
+              dataType: "json",
+              url: "/User/SaveFiles",
+              contentType:false,
+              processData:false,
+              data: file,
+              beforeSend: function () {
+                  ShowLoading();
+                  $('#loading').width("80%");
+                 
+
+              },
+              complete: function () {
+                  $('#loading').width("40%");                
+                  $('#loading').width("80%");             
+                  $('#loading').width("100%");
+                  $('#loading').width("100%");
+                  $('#loading').width("100%");             
+                  HideLoading();         
+                  $('#loading').width("10%");
+                 
+
+              },
+              success: function (resp) {
+                  if (resp.uploaded == true) {
+                      var cl = localStorage['cl'];                   
+                  }
+                  
+
+              },
+              error: function (e) {
+                  alert("error");
+              }
+          };
+
+          $.ajax(settings);
+
+          return false;
+      }
+      function download(id)
+      {         
+          window.location = "DownloadFile/" + id;
+      }
+      function searchFiles(text)
+      {
+          $('#ViewArea').hide();
+          $('.fileinput-new').hide();
+          $('#create').hide();
+          $(".files_back").empty();
+          $("error").empty();
+          $("#meta").hide();
+          var d = { "text": text };
+          var settings = {
+              type: "POST",
+              dataType: "json",
+              url: "/User/GetFilesByName",
+              data: d,
+              success: function (resp) {
+                  if (resp.Files && resp.flag == true) {
+                      $("#File_error").html("");
+
+                      var source = $("#filestemplate").html();
+                      var template = Handlebars.compile(source);
+                      var html = template(resp);
+                      $("#filesBody").append(html);
+
+                  }
+                  else {
+                      $("#File_error").html("No Files");
+                  }
+
+              },
+              error: function (e) {
+                  alert("error");
+              }
+          };
+
+          $.ajax(settings);
+
+          return false;
+
+      }   // bonustask
+      function downloadMeta() {
+          var id = localStorage['cl'];
+        
+          var url = "/User/DownloadMetaData/" + id;
+          window.location.href = url;
+             
+          
+      }
+     
+    </script> 
+      
+}
+
+<div id="divoverlay" class="overlay">
+</div>
+<div id="loadingBar" class="progress" style="margin-top:400px;margin-left:500px;z-index: 102;
+           width:50%;position:fixed;display:none">
+    <div id="loading" class="progress-bar progress-bar-striped active" role="progressbar"  
+         aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:10%">      
+    </div>
+</div>
+<div id="modal_dialog" class="web_dialog">
+    <table style="width: 100%; border: 0px;" cellpadding="3" cellspacing="0">
+        <tr>
+            <td class="dialog_title">
+                Create Folder
+            </td>
+            <td class="dialog_title align_right">
+                <a id="lnkClose" style="padding:3px;background-color:red;cursor:pointer;" onclick="HideDialog();">X</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="content" style="text-align:center">
+                    Folder:<input class="form-control" id="txtName" type="text" />
+                    <button class="btn btn-default createBtn" id="btnOK" value="OK">Create</button>
+                </div>
+            </td>            
+        </tr>
+    </table>
+</div>
+<div  class="fileinput fileinput-new" data-provides="fileinput">
+    <span class="btn btn-default btn-file" style="background-color:dodgerblue;cursor:pointer;border-radius:50px">
+        <span class="fileinput-new" style="color:white;" >+</span>
+        <span class="fileinput-exists">+</span>
+        <input id="uploadedFile" type="file" name="..." multiple>
+    </span>
+    
+</div>
+<div><button id="meta" class="btn btn-primary" style="margin-left:20px;margin-top:10px;" onclick="downloadMeta()">Download Meta</button></div>
+<div class="alert alert-danger alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Alert!</strong> <span id="alert"></span>
+</div>
+
+
+    <hr class="style14" />
+<div id="ViewArea">
+    <div id="path" style="margin-left:15px;font-size:large;">
+
+    </div>
+    <hr class="style13" />
+
+    <h3 style="color:royalblue;margin-left:10px">Folders</h3>
+    <span id="error"></span>
+    <!--All folders are here-->
+    <div id="foldersBody" style="display:block">
+        <span class="has-error"></span>
+        <script id="folderstemplate" type="text/x-handlebars-template">
+            <div class="folders_back">
+                {{#each Folders}}
+                <div class="folder box" id="folder">
+                    <div style="text-align:center" ondblclick="enter({{FolderID}},'{{Name}}')">
+                        <img src=@Url.Content("~/background/folderIcon.png") height="40" width="40" /><span id="info" fol_id="{{FolderID}}" onclick="del({{FolderID}})"> {{Name}}</span>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </script>
+    </div>
+</div>
+
+    <h3 style="color:royalblue;margin-left:10px;"> Files </h3>
+    <hr class="style13" />
+    <span id="File_error"></span>
+    <!--All folders are here-->
+    <div id="filesBody" style="display:block">
+        <span class="has-error"></span>
+        <script id="filestemplate" type="text/x-handlebars-template">
+            <div class="files_back">
+                {{#each Files}}
+                <div class="img-thumbnail" style="margin-left:20px;width:170px" id="files">
+                    <div>
+                        <img src="@Url.Content("~/Thumbnails/"){{Name}}.bmp" height="150" width="160" />
+                    </div>
+                    <span style="overflow:hidden;display:block;background-color:white">{{Name}}</span>
+                    <button class="btn btn-default" onclick="download({{FileID}})">Download</button>
+                    <button class="btn btn-danger" onclick="delFile({{FileID}})">Delete</button>
+                </div>
+                <!--yet to decide-->
+                {{/each}}
+            </div>
+        </script>
+    </div>

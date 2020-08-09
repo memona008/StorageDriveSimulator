@@ -1,0 +1,266 @@
+﻿<html>
+<head>
+    <title>
+        Premission Management
+    </title>
+    <meta charset="utf-8">
+    <script src="SecurityManager.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+      <link rel="stylesheet" href="mystyle.css"/>
+
+    <script>
+
+        function Main() {
+            var roles = SecurityManager.GetAllRoles();
+            var cmb = document.getElementById('role')
+
+            for (var i = 0; i < roles.length; i++) {
+                var opt = document.createElement("option");
+                opt.setAttribute("value", roles[i].Name);
+               
+                opt.innerText = roles[i].Name;
+                cmb.appendChild(opt);
+
+            }
+            var users = SecurityManager.GetAllUsers();
+            var cmb = document.getElementById('user')
+
+            for (var i = 0; i < users.length; i++) {
+                var opt = document.createElement("option");
+                opt.setAttribute("value", users[i].Login);
+                opt.innerText = users[i].Name;
+
+
+                cmb.appendChild(opt);
+
+            }
+
+
+            // showTable
+
+
+            displayTable();
+
+
+            // save
+
+            var sav = document.getElementById('save');
+            sav.onclick = save_f;
+
+
+            var clr = gid('clear');
+            clr.onclick = function () {
+                gid('role').value = "";
+                gid('user').value = "";
+
+            }
+
+
+        }
+        // save
+
+        function save_f() {
+            // VALIDATION IF FIELDS ARE EMPTY
+            if (gid('user').value == "" || gid('role') == "") {
+                alert("Fill the fields first!");
+                return false;
+            }
+            // CHECK IF ENTRY ALREADY EXISTS
+            var check = gid('save').name;
+            var arr = SecurityManager.GetAllUserRoles();
+            var flag = true;
+            var id;
+            for (var i = 0; i < arr.length && flag; i++)
+                if (arr[i].Role == gid('role').value && arr[i].User == gid('user').value) {
+                    flag = false;
+                    id = arr[i].ID.toString();
+                }
+
+            if (check == "editMode") {
+                if (!flag)
+                    SecurityManager.DeleteUserRole(id, nothing, nothing);
+
+                var p = new Object();
+                p["Role"] = gid('role').value;
+                p["User"] = gid('user').value;
+
+                SecurityManager.SaveUserRole(p, success, fail);
+                gid('save').name = "newMode";
+                location.reload();
+            }
+            else {
+
+                if (!flag)
+                    alert("User-Role Already Exist!");
+                else {
+                    var p = new Object();
+                    p["Role"] = gid('role').value;
+                    p["User"] = gid('user').value;
+                    SecurityManager.SaveUserRole(p, success, fail);
+                    location.reload();
+                }
+            }
+
+        }
+
+        // delete
+        function delRecord(element) {
+            var tab = document.getElementById('pTable');
+            var row = Number(element.closest('tr').rowIndex);
+            var tempRow = tab.rows[row];
+            var id = Number(tempRow.cells[0].innerHTML.toString());
+            var ret = confirm("Do you want to delete User-Role " + id + "?");
+            if (ret == true) {
+                SecurityManager.DeleteUserRole(id, success, fail);
+                // tab.deleteRow(row);
+                location.reload();
+
+            }
+
+
+        }
+        // editTable
+        function editRecord(element) {
+            var row = Number(element.closest('tr').rowIndex);
+            var tab = document.getElementById('pTable');
+            var tempRow = tab.rows[row];
+            var id = Number(tempRow.cells[0].innerHTML.toString());
+            var p = SecurityManager.GetUserRoleById(id);
+            gid('role').value = p["Role"];
+            gid('user').value = p["User"];
+
+            var s = gid('save');
+            s.name = "editMode";
+
+        }
+
+
+        // success & fail functions
+        function nothing() {
+            // awi
+        }
+        function success() {
+            alert("Task successfully done!");
+        }
+        function fail() {
+            alert("Something Occurred Try Again!");
+        }
+
+        // display the table
+        function displayTable() {
+            var arr = SecurityManager.GetAllUserRoles();
+            var tabl = document.getElementById('pTable');
+
+            if (arr.length == 0)
+                tabl.style.display = "none";
+            else
+                tabl.style.display = "table";
+
+
+            for (var i = 0; i < arr.length; i++) {
+
+                var row = tabl.insertRow(i + 1);
+                col = row.insertCell(0);
+                col.innerText = arr[i].ID;
+                col = row.insertCell(1);
+                col.innerText = arr[i].User;
+                col = row.insertCell(2);
+                col.innerText = arr[i].Role;
+                col = row.insertCell(3);
+
+                col.innerHTML = "<a onclick=\"editRecord(this)\"> Edit </a>";
+                col = row.insertCell(4);
+
+                col.innerHTML = "<a onclick=\"delRecord(this)\"> Delete </a>";
+
+            }
+        }
+        function gid(id) {
+            return document.getElementById(id);
+        }
+
+    </script>
+
+</head>
+<body onload="Main()">
+
+   <nav style=" " class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+            <ul style="font-size:17px;font-family:Consolas" class="nav navbar-nav">
+                <li>
+                    <a href="AdminHome.php">Home</a>
+                </li>
+                <li>
+                    <a href="UserManagement.php"><b>User Management</b></a>
+                </li>
+                <li>
+                    <a href="RoleManagement.php"><b>Role Management</b></a>
+                </li>
+                <li>
+                    <a href="PermissionManagement.php"><b>Permission Management</b></a>
+                </li>
+                <li>
+                    <a href="RolePermission.php"><b>Role-Permission Management</b></a>
+                </li>
+                <li>
+                    <a href="UserRole.php"><b>User-Role Management</b></a>
+                </li>
+                <li>
+                    <a href="Login.php"><b>Log Out</b></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="cont">
+        <div class="contained">
+            <h1> User-Role Management</h1>
+        </div>
+
+        <form style="padding:10px;background-color:white">
+            <div class="form-group">
+
+
+                <label for="usr_rol">User:</label>
+                <select class="form-control" id="user"></select>
+                <br />
+                <label for="usr_rol">Role:</label>
+                <select class="form-control" id="role"></select>
+                <br />
+
+
+            </div>
+
+
+
+        </form>
+        <div class="contained">
+            <button style="position:relative;float:right;top:20px;padding:5px 50px" class="btn btn-default" name="newMode" id='save'>Save</button>
+            <button style="position:relative;float:left;top:20px; padding:5px 50px" class="btn btn-default" id='clear'>Clear</button>
+        </div>
+    </div>
+
+
+    <div>
+        <table id="pTable" border="1">
+
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Role</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+
+        </table>
+
+    </div>
+
+</body>
+</html>

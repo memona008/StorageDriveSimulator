@@ -1,0 +1,113 @@
+﻿  
+body{
+    background-color:white;
+}
+.folders_back{
+    width:100%;
+    height:auto;
+}
+.files_back{
+    width:100%;
+    height:auto;
+}
+.nav a{
+    color:#fff;
+    text-decoration:none;
+}
+hr.style13 {
+	height: 10px;
+	border: 0;
+	box-shadow: 0 10px 10px -10px #8c8b8b inset;
+}
+hr.style14 { 
+  border: 0; 
+  height: 1px; 
+  background-image: -webkit-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+  background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0); 
+}
+.folder{
+    border-radius:5px;
+    margin-top:20px;
+    background-color:whitesmoke;
+    overflow:hidden;
+    width:250px;
+    height:auto;
+    box-shadow:1.5px 1px 0.5px;
+    border:none;
+    margin-left:20px;
+    display:inline-block;
+    position:relative;
+    padding:5px;
+    
+}
+.folder div{
+    cursor:pointer;
+}
+.createBtn{
+    background-color:#63a4ff;
+    margin-top:10px;
+    margin-left:10px;
+    display:inline;
+     
+}
+
+.fileinput{
+    display:block;
+    position:relative;
+    margin-top:30px;
+    margin-left:10px;
+    
+   
+}
+ .overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            z-index: 101;
+            background-color: #000000;
+            opacity: .15;
+            filter: alpha(opacity=15);
+      
+            z-index: 101;
+        }
+
+        .web_dialog {
+            left: 50%;
+            top: 50%;
+            width: auto;
+            height: auto;
+            background-color: White;
+           border-bottom-color:royalblue;
+           border-bottom-style:solid;
+            z-index: 102;
+            display: none;
+            position: fixed;
+            margin-left: -100px;
+            margin-top: -100px;
+        }
+
+        .dialog_title {
+            background-color: dodgerblue;
+            padding: 5px;
+            color: White;
+            font-size:large;
+        }
+
+            .dialog_title a {
+                color: White;
+                text-align: right;
+            }
+
+        .align_right {
+            text-align: right;
+        }
+
+        .content {
+            padding: 2px;
+            margin:50px;
+        }

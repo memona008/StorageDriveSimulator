@@ -1,0 +1,91 @@
+<html>
+<head>
+    <title>
+        UserHome
+    </title>
+    <meta charset="utf-8">
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="SecurityManager.js"></script>
+  <link rel="stylesheet" href="mystyle.css"/>
+   
+    <script>
+
+        function Main() {
+
+            var username = localStorage["username"];
+            var arr = SecurityManager.GetAllUserRoles();
+            var arr2 = [];
+            var list = document.getElementById('roleList')
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].User == username) {
+                    var l = document.createElement("li");
+
+
+                    l.appendChild(document.createTextNode(arr[i].Role));
+                    list.appendChild(l);
+
+                    arr2.push(arr[i].Role.toString());
+
+                }
+            }
+
+            arr = SecurityManager.GetAllRolePermissions();
+            var list2 = document.getElementById('pList')
+            for (var i = 0; i < arr.length; i++) {
+                for (var j = 0; j < arr2.length; j++) {
+                    if (arr2[j] == arr[i].Role) {
+                        var l = document.createElement("li");
+                        l.appendChild(document.createTextNode(arr[i].Permission));
+                        list2.appendChild(l);
+
+                    }
+                }
+
+            }
+        }
+
+    </script>
+</head>
+<body onload="Main()">
+
+    <nav style=" " class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+            <ul style="font-size:17px;font-family:Consolas" class="nav navbar-nav">
+                <li class="active">
+                    <a href="UserHome.html">Home</a>
+                </li>
+                <li>
+                    <a href="Login.html"><b>Log Out</b></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <center>
+        <div class="light">
+            <div class="contained" style="height:100px;width:600px;padding-left:15px; padding-top:20px;text-align:left;font-size:30px;color:white">
+                <p>Welcome User </p>
+            </div>
+            <div>
+                <h3> Roles </h3>
+                <ul id="roleList"></ul>
+
+
+            </div>
+            <div class="contained" style="height:auto;width:600px;padding-left:3px; text-align:left;font-size:20px;color:white">
+                <h3> Permissions: </h3>
+
+            </div>
+            <ul id="pList"></ul>
+        </div>
+
+    </center>
+
+</body>
+</html>

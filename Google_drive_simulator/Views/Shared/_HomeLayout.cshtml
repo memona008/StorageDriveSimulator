@@ -1,0 +1,71 @@
+﻿@model DS.Entities.UserDTO
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+@Styles.Render("~/Content/css")
+@Styles.Render("~/Content/drive_simulator.css")
+@Styles.Render("~/Content/jasny-bootstrap.css")
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/MyAppGlobal.js"></script>
+
+<script src="~/Scripts/handlebars.js"></script>
+
+@RenderSection("scripts", false)
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_HomeLayout</title>
+</head>
+<body style="margin:0">
+    <div class="navbar-fixed-top navbar-inverse" style="background-color:royalblue;position:absolute;">
+        <div class="navbar-header" style="background-color:dodgerblue;cursor:pointer;">
+            <div class="navbar-text nav" style="color:white;float:left;font-size:large">
+               <i style="font-size:x-large;" onclick="back();"> &larr;</i>
+            </div>
+        </div>
+        <div class="navbar-header">
+
+            <div class="navbar-text nav" style="color:white;float:left;font-size:large">
+                <i style="font-size:x-large">Storage Drive</i>
+            </div>
+        </div>
+            <div class="navbar-header">
+                
+                <div class="navbar-text nav" style="color:white;float:left;font-size:large">
+                    @Html.ActionLink(Google_drive_simulator.Security.SessionManager.User.Name, "Home", "User")
+                </div>
+            </div>
+        <div class="navbar-header">
+            <div class="navbar-text nav" style="color:white;font-size:large;">
+                <img id="create" style="cursor:pointer" src=@Url.Content("~/background/addFolder.png") height="30" width="30" onclick="ShowDialog();">
+            </div>
+        </div>
+       
+        <div  class="navbar-form"  style="display:inline;">
+           <span> <input style="margin-top:10px"type="text" class="form-control" placeholder="Search" id="searchText"></span>
+                <button class="btn btn-default"  style="margin-top:10px" id="search">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </div>
+ 
+
+            
+                <div class="navbar-text nav" style="float:right;color:white;font-size:large">
+                    <img src=@Url.Content("~/background/logout.png") height="30" width="30"> @Html.ActionLink("Logout", "Logout", "User")
+                </div>
+         
+
+        </div>
+
+    <div>
+
+        @RenderBody()
+    </div>
+   
+</body>
+</html>
